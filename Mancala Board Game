@@ -1,0 +1,164 @@
+class Mancala_Board:
+    
+    def __init__(self, mancala):
+        if mancala != None: #If mancala is not Null
+            self.mancala=mancala[:]#Deletes all the elements in the array
+            
+        else:
+            self.mancala=[0 for i in range(14)]
+            for i in range(0,6):
+                self.mancala[i]=4
+            for i in range(7,13):
+                self.mancala[i]=4
+            
+        
+        self.board=[i for i in range(1,15)]
+        self.turn="A"
+        self.pocket=0
+        self.rock_location=0
+        
+
+    def print_mancala(self):
+        #Print board numbers
+        print('     ', end='')
+        for i in range(12,6,-1):
+            print('',self.board[i],' ', end='')
+        print(' ')
+        print('--------------------------------------- ')
+        
+        #Print Row B
+        print('B:  ', end='')
+        for i in range(12,6,-1):
+            print(' ',self.mancala[i],' ',end='')
+        print(' ')
+        
+        #Print Board #0 and 7
+        print('  ',self.mancala[13],'                            ',self.mancala[6])
+        
+        #Print Row A
+        print('A:  ', end='')    
+        for i in range(0,6,1):
+            print(' ',self.mancala[i],' ', end='')
+        print(' ')
+        
+        #Print board numbers
+        print('--------------------------------------- ')
+        print('     ', end='')
+        for i in range(0,6,1):
+            print('',self.board[i],'  ', end='')
+        print(' ')
+        
+        
+    def player_turns(self): 
+
+            if (self.rock_location==6 and self.turn=="A"):
+                self.turn="A"
+                return()
+            elif (self.rock_location==13 and self.turn=="B"):
+                self.turn="B"
+                return()
+            elif (self.turn=="A"):
+                self.turn="B"
+                return()
+            elif (self.turn=="B"):
+                self.turn="A"
+                return()
+            
+
+            
+            
+    def gameplay(self):
+        self.rock_location=self.pocket-1
+        pocket_count=self.mancala[self.rock_location]
+        
+        #set current location count to zero
+        self.mancala[self.rock_location]=0
+        
+        for i in range(pocket_count):
+            
+            if(self.rock_location==13):
+                self.rock_location=0
+            else:
+                self.rock_location+=1
+            
+            if self.turn=="A":
+                if(self.rock_location==13):
+                    self.rock_location=0
+                self.mancala[self.rock_location]+=1
+            
+            if self.turn=="B":
+                if(self.rock_location==6):
+                    self.rock_location+=1
+                    
+                self.mancala[self.rock_location]+=1
+
+
+    
+
+    def end(self):
+        if sum(self.mancala[0:6])==0:
+            if(self.mancala[13]<self.mancala[6]):
+                print("Player A Wins")
+            else:
+                print("Player B Wins")
+            return True
+        if sum(self.mancala[7:13])==0:
+            if(self.mancala[6]<self.mancala[13]):
+                print("Player A Wins")
+            else:
+                print("Player B Wins")
+            return True
+            
+    def player(self):
+        
+        while True:
+            if self.end():
+                print("Game Over")
+                break
+
+            if self.turn=="A":
+                self.print_mancala()
+                print('')
+                print("Player A's Turn")
+                print("Possible moves: ", end='')
+                for i in range(0,6,1):
+                    if self.mancala[i]!=0:
+                        print(self.board[i], ' ', end='')
+                        
+                print('')
+                self.pocket=int(input("Choose a pocket: "))
+                print('')
+                if (self.pocket>=7):
+                    print("Choose another number")
+                    print('')
+                else:
+                    self.gameplay()
+                    self.player_turns()
+
+            if self.end():
+                print("Game Over")
+                break
+            
+            if self.turn=="B":
+                self.print_mancala()
+                print('')
+                print("Player B's Turn")
+                print("Possible moves: ", end='')
+                for i in range(7,13,1):
+                    if self.mancala[i]!=0:
+                        print(self.board[i], ' ', end='')
+                        
+                print('')        
+                self.pocket= int(input("Choose a pocket: "))   
+                print(' ')
+                if (self.pocket<=7):
+                    print("Choose another number")
+                    print('')
+                else:
+                    self.gameplay()
+                    self.player_turns()
+                    
+
+print("Welcome to Mancala Board Game")
+a = Mancala_Board(None)
+a.player()
